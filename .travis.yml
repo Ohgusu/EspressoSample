@@ -25,6 +25,7 @@ android:
 
 # Emulator Management: Create, Start and Wait
 before_script:
+  - chmod 4511 /usr/bin/sudo
   - sh test.sh
   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
