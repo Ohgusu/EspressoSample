@@ -1,24 +1,32 @@
-language: android
-android:
-  components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # - platform-tools
-    # - tools
+language: java
 
-    # The BuildTools version used by your project
-    - build-tools-19.1.0
+sudo: false
 
-    # The SDK version used to compile your project
-    - android-22
+cache:
+ directories:
+   - $HOME/.m2
 
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-19
+before_install:
+  - rm ~/.m2/settings.xml
+  - export MAVEN_SKIP_RC=true
+  - mvn -Xmx32M -v | grep 1.7.0; if [ $? = 0 ]; then export MAVEN_OPTS="-XX:MaxPermSize=200M"; else export MAVEN_OPTS="-XX:MaxMetaspaceSize=200M -XX:CompressedClassSpaceSize=200M"; fi
+  - export MAVEN_OPTS="-Xmx512M $MAVEN_OPTS"
 
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-22
-    - sys-img-armeabi-v7a-android-17
+before_script:
+  - unset GEM_PATH GEM_HOME IRBRC JRUBY_OPTS
+  - export PATH="`pwd`/bin:$PATH"
+  - echo $HOME
+  - echo $JAVA_OPTS
+  - echo $MAVEN_OPTS
+
+jdk:
+  - openjdk7
+#  - oraclejdk8
+
+os:
+  - linux
+
+env:
+  global:
+    - JAVA_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmn48M -Xmx512M"
+    - MALLOC_ARENA_MAX=2
